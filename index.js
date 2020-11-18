@@ -80,6 +80,29 @@ app.get('/users/:userId', async function(req, res){
 
 })
 
+app.post('/categories/:categoryId/product', async function(req, res) {
+  const categoryId = req.params.categoryId;
+  const category = await models.Category.findByPk(categoryId);
+  const product = await category.createProduct({
+    Name: 'Name',
+    Description: 'Description',
+    Price: 10
+  });
+  
+  res.send({
+    status: 'ok',
+  });
+});
+
+app.post('/user/:userId/product/:productId/associate', async (req, res) => {
+  const { userId, productId } = req.params;
+  const user = await models.User.findByPk(userId);
+  const product = await models.Product.findByPk(productId);
+  await user.addProduct(product);
+  res.send({
+    status: 'ok',
+  });
+});
  app.listen(port,function() {
    console.log(`Example app listening at http://localhost:${port}`)
  });
